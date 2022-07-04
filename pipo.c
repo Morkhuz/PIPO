@@ -8,7 +8,6 @@ const uint64_t k0 = 0x7E1D20AD2E152297;
 const uint64_t plaintext = 0x098552F61E270026;
 const uint64_t ciphertext = 0x6B6B2981AD5D0327;
 
-
 void rlayer (uint8_t array[]) {
     array[1] = ((array[1] << 7)) | ((array[1] >> 1));
     array[2] = ((array[2] << 4)) | ((array[2] >> 4));
@@ -17,10 +16,7 @@ void rlayer (uint8_t array[]) {
     array[5] = ((array[5] << 5)) | ((array[5] >> 3));
     array[6] = ((array[6] << 1)) | ((array[6] >> 7));
     array[7] = ((array[7] << 2)) | ((array[7] >> 6));
-
-    
 }
-
 
 uint8_t sbox_8 (uint8_t var) {
     // split 8-bit Input into 8 bits --> MSB x[7] ... x[0] LSB
@@ -93,10 +89,9 @@ uint8_t sbox_8 (uint8_t var) {
     return output;
 }
 
-
 int main () {
     
-    // split 64-bit Input into 8 bytes --> MSB x[7] ... x[0] LSB
+    // split 64-bit Input into 8 bytes --> MSB X[7] ... X[0] LSB
     uint8_t X[8];
     X[0] = (plaintext >> 0) & 0xFF;
     X[1] = (plaintext >> 8) & 0xFF;
@@ -106,32 +101,6 @@ int main () {
     X[5] = (plaintext >> 40) & 0xFF;
     X[6] = (plaintext >> 48) & 0xFF;
     X[7] = (plaintext >> 56) & 0xFF;
-    
-
-    //  Test R-Layer
-    /*
-    printf("Before R-Layer: \n");
-    for (int i = 0; i < 8; i++) {
-        printf("Value of X[%d]: %X \n", i, X[i]);
-    }
-    
-    rlayer(X);
-
-    printf("After R-Layer: \n");
-    for (int i = 0; i < 8; i++) {
-        printf("Value of X[%d]: %X \n", i, X[i]);
-    }
-    */
-   
-   //   Test S-Box
-   /*
-   uint8_t test = 0x31;
-   
-   uint8_t output = sbox_8(test);
-
-   printf("S8(%X)=%X\n", test, output);
-   */
-
 
     // split key k0 and k1 into 8 bytes
     uint8_t k_0[8];
@@ -180,8 +149,7 @@ int main () {
         // Add Round Key XOR round constant
         if (i % 2 == 0) {
             // Use key k0
-            k_0[0] ^= i;
-            X[0] ^= k_0[0];
+            X[0] ^= (k_0[0] ^ i);
             X[1] ^= k_0[1];
             X[2] ^= k_0[2];
             X[3] ^= k_0[3];
@@ -192,8 +160,7 @@ int main () {
         }
         else {
             // use key k1
-            k_1[0] ^= i;
-            X[0] ^= k_1[0];
+            X[0] ^= (k_1[0] ^ i);
             X[1] ^= k_1[1];
             X[2] ^= k_1[2];
             X[3] ^= k_1[3];
@@ -205,13 +172,8 @@ int main () {
 
     }
 
-    for (int i = 7; i >= 0; i--) {
-        printf("Value of X[%d]: %X \n", i, X[i]);
-    }
-
-
-
-
-
+    // Print Output after Round 13
+    uint64_t result = (uint64_t)(X[0]) | (uint64_t)(X[1]) << 8 | (uint64_t)(X[2]) << 16 | (uint64_t)(X[3]) << 24 | (uint64_t)(X[4]) << 32 | (uint64_t)(X[5]) << 40 | (uint64_t)(X[6]) << 48 | (uint64_t)(X[7]) << 56;
+    printf("Result = 0x%llX\n", result);
 
 }
