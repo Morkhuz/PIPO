@@ -12,7 +12,7 @@ const uint64_t k1 = 0x6DC416DD779428D2;
 const uint64_t k0 = 0x7E1D20AD2E152297;
 const uint64_t ciphertext = 0x6B6B2981AD5D0327;
 
-void secand (uint8_t temp, uint8_t a, uint8_t b, uint8_t a1, uint8_t b1, uint8_t mask) {
+uint8_t secand (uint8_t a, uint8_t b, uint8_t a1, uint8_t b1, uint8_t mask) {
     // declare variables
     uint8_t r4, r5; // temp variables
     uint8_t a0 = a ^ a1;
@@ -34,10 +34,10 @@ void secand (uint8_t temp, uint8_t a, uint8_t b, uint8_t a1, uint8_t b1, uint8_t
     r5 &= b1;   // step 11
     r4 ^= r5;   // step 12
 
-    temp = r4;
+    return r4;
 }
 
-void secor (uint8_t temp, uint8_t a, uint8_t b, uint8_t a1, uint8_t b1, uint8_t c) {
+uint8_t secor (uint8_t a, uint8_t b, uint8_t a1, uint8_t b1, uint8_t c) {
     // declare variables
     uint8_t r4, r5, r6; // temp variables
     uint8_t a0 = a ^ a1;
@@ -56,10 +56,10 @@ void secor (uint8_t temp, uint8_t a, uint8_t b, uint8_t a1, uint8_t b1, uint8_t 
     r4 ^= r6;   // step 10
     r4 ^= r5;   // step 11
 
-    temp = r4;
+    return r4;
 }
 
-void rlayer (uint8_t array[]) {
+void rlayer (uint8_t *array) {
     array[1] = ((array[1] << 7)) | ((array[1] >> 1));
     array[2] = ((array[2] << 4)) | ((array[2] >> 4));
     array[3] = ((array[3] << 3)) | ((array[3] >> 5));
@@ -76,31 +76,31 @@ void slayer (uint8_t *X, uint8_t m0, uint8_t m1, uint8_t m2) {
 
     // declare helping variables
     uint8_t T[3] = {0, };
-    uint8_t temp = 0;
+    uint8_t temp;
     uint8_t c = (m0 | m1);
 
-    secand(temp, X[7], X[6], m0, m1, m2);
+    temp = secand(X[7], X[6], m0, m1, m2);
     X[5] = X[5] ^ temp;
 
-    secand(temp, X[3], X[5], m2, m0, m1);
+    temp = secand(X[3], X[5], m2, m0, m1);
     X[4] = X[4] ^ temp;
     X[7] = X[7] ^X[4];
     X[6] = X[6] ^ X[3];
 
-    secor(temp, X[5], X[4], m0, m2, c);
+    temp = secor(X[5], X[4], m0, m2, c);
     X[3] = X[3] ^ temp;
     X[5] = X[5] ^ X[7];
 
-    secand(temp, X[5], X[6], m2, m0, m1);
+    temp = secand(X[5], X[6], m2, m0, m1);
     X[4] = X[4] ^ temp;
 
-    secand(temp, X[1], X[0], m1, m0, m2);
+    temp = secand(X[1], X[0], m1, m0, m2);
     X[2] = X[2] ^ temp;
 
-    secor(temp, X[1], X[2], m1, m0, c);
+    temp = secor(X[1], X[2], m1, m0, c);
     X[0] = X[0] ^ temp;
 
-    secor(temp, X[2], X[0], m0, m2, c);
+    temp = secor(X[2], X[0], m0, m2, c);
     X[1] = X[1] ^ temp;
     X[2] = X[2];
 
@@ -111,20 +111,20 @@ void slayer (uint8_t *X, uint8_t m0, uint8_t m1, uint8_t m2) {
     T[1] = X[3];
     T[2] = X[4];
 
-    secand(temp, X[5], T[0], m2, m0, m1);
+    temp = secand(X[5], T[0], m2, m0, m1);
     X[6] = X[6] ^ temp;
 
     T[0] = T[0] ^X[6];
 
-    secor(temp, T[2], T[1], m1, m2, c);
+    temp = secor(T[2], T[1], m1, m2, c);
     X[6] = X[6] ^ temp;
 
     T[1] = X[5] ^ m0;
     
-    secor(temp, X[6], T[2], m0, m1, c);
+    temp = secor(X[6], T[2], m0, m1, c);
     X[5] = X[5] ^ temp;
 
-    secand(temp, T[1], T[0], m0, m1, m2);
+    temp = secand(T[1], T[0], m0, m1, m2);
     T[2] = T[2] ^ temp;
 
     X[2] = X[2] ^ T[0];
@@ -151,21 +151,34 @@ void add_mask (uint8_t *x, uint8_t *m) {
     x[7] ^= m[1];
 }
 
+void remove_mask (uint8_t *x, uint8_t *m) {
+    x[0] ^= m[0];
+    x[1] ^= m[1];
+    x[2] ^= m[1];
+    x[3] ^= m[2];
+    x[4] ^= m[0];
+    x[5] ^= m[1];
+    x[6] ^= m[1];
+    x[7] ^= m[0];
+}
+
 int main () {
-    
+    // init var
+    uint8_t mrk[8];
     srand(time(NULL));
+
     // mask initialization
     uint8_t m[10];
     m[0] = 0xAE; //rand() % 256;
     m[1] = 0x6A; //rand() % 256;
     m[2] = m[0] ^ m[1];
-    m[3] = (m[1] >> 1) ^ m[1];
-    m[4] = (m[2] >> 4) ^ m[1];
-    m[5] = (m[0] >> 5) ^ m[2];
-    m[6] = (m[1] >> 2) ^ m[0];
-    m[7] = (m[1] >> 3) ^ m[1];
-    m[8] = (m[2] >> 7) ^ m[1];
-    m[9] = (m[1] >> 6) ^ m[0];
+    m[3] = ((m[1] >> 1) | (m[1] << 7)) ^ m[1];
+    m[4] = ((m[2] >> 4) | (m[2] << 4)) ^ m[1];
+    m[5] = ((m[0] >> 5) | (m[0] << 3)) ^ m[2];
+    m[6] = ((m[1] >> 2) | (m[1] << 6)) ^ m[0];
+    m[7] = ((m[1] >> 3) | (m[1] << 5)) ^ m[1];
+    m[8] = ((m[2] >> 7) | (m[2] << 1)) ^ m[1];
+    m[9] = ((m[1] >> 6) | (m[1] << 2)) ^ m[0];
     
 #ifdef DEBUG
     printf("m0 = 0x%02X\n", m[0]);
@@ -240,9 +253,11 @@ int main () {
     printf("\n  X:            %02X %02X %02X %02X   %02X %02X %02X %02X\n", X[7], X[6], X[5], X[4], X[3], X[2], X[1], X[0]);
 #endif
 
-/*
+
+
+
     // 13 Rounds of S-Layer --> R-layer --> XOR Round Key
-    for (int i = 1; i <= 13; i++) {
+    for (int i = 1; i < 13; i++) {
 
 #ifdef DEBUG
             printf("\nRound %d:", i);        
@@ -250,7 +265,7 @@ int main () {
 #endif
 
         // S-Boxes            
-        sbox_8(X);
+        slayer(X, m[0], m[1], m[2]);
 
 #ifdef DEBUG
             printf("  After S-Box:  %02X %02X %02X %02X   %02X %02X %02X %02X\n", X[7], X[6], X[5], X[4], X[3], X[2], X[1], X[0]);
@@ -260,28 +275,27 @@ int main () {
         rlayer(X);
 
 #ifdef DEBUG        
-            printf("  After R-Layer:%02X %02X %02X %02X   %02X %02X %02X %02X\n", X[7], X[6], X[5], X[4], X[3], X[2], X[1], X[0]);        
+            printf("  R out:        %02X %02X %02X %02X   %02X %02X %02X %02X\n", X[7], X[6], X[5], X[4], X[3], X[2], X[1], X[0]);        
 #endif
-
+    
         // Add Round Key XOR round constant
         if (i % 2 == 0) {
             // round key 
-            uint8_t mrk[8];
-            mrk[0] = (k_0[0]);
-            mrk[1] = k_0[1];
-            mrk[2] = k_0[2];
-            mrk[3] = k_0[3];
-            mrk[4] = k_0[4];
-            mrk[5] = k_0[5];
-            mrk[6] = k_0[6];
-            mrk[7] = k_0[7]; 
+            mrk[0] = k_0[0] ^ m[1] ^ i;
+            mrk[1] = k_0[1] ^ m[3];
+            mrk[2] = k_0[2] ^ m[4];
+            mrk[3] = k_0[3] ^ m[5];
+            mrk[4] = k_0[4] ^ m[6];
+            mrk[5] = k_0[5] ^ m[7];
+            mrk[6] = k_0[6] ^ m[8];
+            mrk[7] = k_0[7] ^ m[9]; 
 
 #ifdef DEBUG        
-            printf("  RK:           %02X %02X %02X %02X   %02X %02X %02X %02X\n", rk[7], rk[6], rk[5], rk[4], rk[3], rk[2], rk[1], rk[0]);
+            printf("  masked RK:    %02X %02X %02X %02X   %02X %02X %02X %02X\n", mrk[7], mrk[6], mrk[5], mrk[4], mrk[3], mrk[2], mrk[1], mrk[0]);
 #endif
 
             // Use key k0
-            X[0] ^= (mrk[0] ^ i);
+            X[0] ^= mrk[0];
             X[1] ^= mrk[1];
             X[2] ^= mrk[2];
             X[3] ^= mrk[3];
@@ -297,28 +311,27 @@ int main () {
         }
         else {
             // round key 
-            uint8_t mrk[8];
-            mrk[0] = (k_1[0]);
-            mrk[1] = k_1[1];
-            mrk[2] = k_1[2];
-            mrk[3] = k_1[3];
-            mrk[4] = k_1[4];
-            mrk[5] = k_1[5];
-            mrk[6] = k_1[6];
-            mrk[7] = k_1[7]; 
+            mrk[0] = k_1[0] ^ m[1] ^ i;
+            mrk[1] = k_1[1] ^ m[3];
+            mrk[2] = k_1[2] ^ m[4];
+            mrk[3] = k_1[3] ^ m[5];
+            mrk[4] = k_1[4] ^ m[6];
+            mrk[5] = k_1[5] ^ m[7];
+            mrk[6] = k_1[6] ^ m[8];
+            mrk[7] = k_1[7] ^ m[9]; 
 
 #ifdef DEBUG      
-            printf("  RK:           %02X %02X %02X %02X   %02X %02X %02X %02X\n", mrk[7], mrk[6], mrk[5], mrk[4], mrk[3], mrk[2], mrk[1], mrk[0]);
+            printf("  masked RK:    %02X %02X %02X %02X   %02X %02X %02X %02X\n", mrk[7], mrk[6], mrk[5], mrk[4], mrk[3], mrk[2], mrk[1], mrk[0]);
 #endif
             // use key k1
-            X[0] ^= (mrk_1[0] ^ i);
-            X[1] ^= mrk_1[1];
-            X[2] ^= mrk_1[2];
-            X[3] ^= mrk_1[3];
-            X[4] ^= mrk_1[4];
-            X[5] ^= mrk_1[5];
-            X[6] ^= mrk_1[6];
-            X[7] ^= mrk_1[7];
+            X[0] ^= mrk[0];
+            X[1] ^= mrk[1];
+            X[2] ^= mrk[2];
+            X[3] ^= mrk[3];
+            X[4] ^= mrk[4];
+            X[5] ^= mrk[5];
+            X[6] ^= mrk[6];
+            X[7] ^= mrk[7];
 
 #ifdef DEBUG        
             printf("  X:            %02X %02X %02X %02X   %02X %02X %02X %02X\n", X[7], X[6], X[5], X[4], X[3], X[2], X[1], X[0]);
@@ -326,7 +339,26 @@ int main () {
 
         }
     }
-*/
+
+    // Round 13
+    
+    // S-Boxes            
+    slayer(X, m[0], m[1], m[2]);
+
+#ifdef DEBUG
+    printf("\nRound 13:\n");
+    printf("  After S-Box:  %02X %02X %02X %02X   %02X %02X %02X %02X\n", X[7], X[6], X[5], X[4], X[3], X[2], X[1], X[0]);
+#endif
+
+    // R-Layer
+    rlayer(X);
+
+#ifdef DEBUG        
+    printf("  R out:        %02X %02X %02X %02X   %02X %02X %02X %02X\n", X[7], X[6], X[5], X[4], X[3], X[2], X[1], X[0]);        
+#endif
+
+    // remove mask
+    remove_mask(X, m);
 
     // Print Output after Round 13
     uint64_t result = (uint64_t)(X[0]) | (uint64_t)(X[1]) << 8 | (uint64_t)(X[2]) << 16 | (uint64_t)(X[3]) << 24 | (uint64_t)(X[4]) << 32 | (uint64_t)(X[5]) << 40 | (uint64_t)(X[6]) << 48 | (uint64_t)(X[7]) << 56;
