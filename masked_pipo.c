@@ -163,8 +163,7 @@ void remove_mask (uint8_t *x, uint8_t *m) {
 }
 
 int main () {
-    // init var
-    uint8_t mrk[8];
+
     srand(time(NULL));
 
     // mask initialization
@@ -281,6 +280,7 @@ int main () {
         // Add Round Key XOR round constant
         if (i % 2 == 0) {
             // round key 
+            uint8_t mrk[8];
             mrk[0] = k_0[0] ^ m[1] ^ i;
             mrk[1] = k_0[1] ^ m[3];
             mrk[2] = k_0[2] ^ m[4];
@@ -305,12 +305,13 @@ int main () {
             X[7] ^= mrk[7];
 
 #ifdef DEBUG        
-            printf("  X:            %02X %02X %02X %02X   %02X %02X %02X %02X\n", X[7], X[6], X[5], X[4], X[3], X[2], X[1], X[0]);
+            printf("  masked X:     %02X %02X %02X %02X   %02X %02X %02X %02X\n", X[7], X[6], X[5], X[4], X[3], X[2], X[1], X[0]);
 #endif
 
         }
         else {
             // round key 
+            uint8_t mrk[8];
             mrk[0] = k_1[0] ^ m[1] ^ i;
             mrk[1] = k_1[1] ^ m[3];
             mrk[2] = k_1[2] ^ m[4];
@@ -334,7 +335,7 @@ int main () {
             X[7] ^= mrk[7];
 
 #ifdef DEBUG        
-            printf("  X:            %02X %02X %02X %02X   %02X %02X %02X %02X\n", X[7], X[6], X[5], X[4], X[3], X[2], X[1], X[0]);
+            printf("  masked X:     %02X %02X %02X %02X   %02X %02X %02X %02X\n", X[7], X[6], X[5], X[4], X[3], X[2], X[1], X[0]);
 #endif
 
         }

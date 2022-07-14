@@ -1,0 +1,97 @@
+Round 0:
+  Plaintext:    09 85 52 F6   1E 27 00 26
+  RK:           7E 1D 20 AD   2E 15 22 97
+  X:            77 98 72 5B   30 32 22 B1
+
+Round 1:
+  X:            77 98 72 5B   30 32 22 B1
+  After S-Box:  69 A6 D0 9C   72 D4 4B BD
+  After R-Layer:A5 4D 1A 27   93 4D A5 BD
+  RK:           6D C4 16 DD   77 94 28 D3
+  X:            C8 89 0C FA   E4 D9 8D 6E
+
+Round 2:
+  X:            C8 89 0C FA   E4 D9 8D 6E
+  After S-Box:  97 30 ED CF   90 8B B1 CC
+  After R-Layer:5E 60 BD F3   84 B8 D8 CC
+  RK:           7E 1D 20 AD   2E 15 22 95
+  X:            20 7D 9D 5E   AA AD FA 59
+
+Round 3:
+  X:            20 7D 9D 5E   AA AD FA 59
+  After S-Box:  1A 5F 13 B8   C3 4D 92 DB
+  After R-Layer:68 BE 62 2E   1E D4 49 DB
+  RK:           6D C4 16 DD   77 94 28 D1
+  X:            05 7A 74 F3   69 40 61 0A
+
+Round 4:
+  X:            05 7A 74 F3   69 40 61 0A
+  After S-Box:  F3 21 FA 18   68 B0 A8 9C
+  After R-Layer:CF 42 5F 06   43 0B 54 9C
+  RK:           7E 1D 20 AD   2E 15 22 93
+  X:            B1 5F 7F AB   6D 1E 76 0F
+
+Round 5:
+  X:            B1 5F 7F AB   6D 1E 76 0F
+  After S-Box:  F8 65 A6 F7   CD B4 0C 79
+  After R-Layer:E3 CA D4 FD   6E 4B 06 79
+  RK:           6D C4 16 DD   77 94 28 D7
+  X:            8E 0E C2 20   19 DF 2E AE
+
+Round 6:
+  X:            8E 0E C2 20   19 DF 2E AE
+  After S-Box:  A4 FB 7B 95   84 08 C0 79
+  After R-Layer:92 F7 6F 65   24 80 60 79
+  RK:           7E 1D 20 AD   2E 15 22 91
+  X:            EC EA 4F C8   0A 95 42 E8
+
+Round 7:
+  X:            EC EA 4F C8   0A 95 42 E8
+  After S-Box:  82 CF 75 7E   9E D0 71 9B
+  After R-Layer:0A 9F AE 9F   F4 0D B8 9B
+  RK:           6D C4 16 DD   77 94 28 D5
+  X:            67 5B B8 42   83 99 90 4E
+
+Round 8:
+  X:            67 5B B8 42   83 99 90 4E
+  After S-Box:  41 1E 4E 92   CF 1E 94 E9
+  After R-Layer:05 3C C9 A4   7E E1 4A E9
+  RK:           7E 1D 20 AD   2E 15 22 9F
+  X:            7B 21 E9 09   50 F4 68 76
+
+Round 9:
+  X:            7B 21 E9 09   50 F4 68 76
+  After S-Box:  45 F2 B3 09   42 1E 82 C4
+  After R-Layer:15 E5 76 42   12 E1 41 C4
+  RK:           6D C4 16 DD   77 94 28 DB
+  X:            78 21 60 9F   65 75 69 1F
+
+Round 10:
+  X:            78 21 60 9F   65 75 69 1F
+  After S-Box:  BA 39 F9 1A   1D D7 BC B0
+  After R-Layer:EA 72 3F 86   E8 7D 5E B0
+  RK:           7E 1D 20 AD   2E 15 22 9D
+  X:            94 6F 1F 2B   C6 68 7C 2D
+
+Round 11:
+  X:            94 6F 1F 2B   C6 68 7C 2D
+  After S-Box:  51 46 D8 5D   F3 02 B1 94
+  After R-Layer:45 8C 1B 57   9F 20 D8 94
+  RK:           6D C4 16 DD   77 94 28 D9
+  X:            28 48 0D 8A   E8 B4 F0 4D
+
+Round 12:
+  X:            28 48 0D 8A   E8 B4 F0 4D
+  After S-Box:  16 6C 93 5C   F8 A3 72 AF
+  After R-Layer:58 D8 72 17   C7 3A 39 AF
+  RK:           7E 1D 20 AD   2E 15 22 9B
+  X:            26 C5 52 BA   E9 2F 1B 34
+
+Round 13:
+  X:            26 C5 52 BA   E9 2F 1B 34
+  After S-Box:  81 D7 F9 71   5B 9C 56 F8
+  After R-Layer:06 AF 3F 5C   DA C9 2B F8
+  RK:           6D C4 16 DD   77 94 28 DF
+  X:            6B 6B 29 81   AD 5D 03 27
+
+Result PIPO-64/128 = 0x6B6B2981AD5D0327
