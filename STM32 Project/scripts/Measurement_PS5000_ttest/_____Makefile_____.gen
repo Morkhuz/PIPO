@@ -1,0 +1,69 @@
+# A simple makefile generator by KiSoft, 2010. mailto: kisoft@rambler.ru
+# version: 0.3.12.5
+
+# Project Variables start
+CPP=mingw32-g++.exe
+CC=mingw32-gcc.exe
+LD=mingw32-g++.exe
+LIB=ar.exe
+WINDRES=windres.exe
+# Project Variables end
+
+# Target: Debug
+
+OBJS_DEBUG=obj\Debug\lib\EMSFilesystem.o obj\Debug\lib\Scopetool.o obj\Debug\main.o obj\Debug\picoscope\picoErrors.o obj\Debug\picoscope\picoscope.o obj\Debug\scard\smartcard.o obj\Debug\iostreams\dbgstream.o
+
+Debug: bin/Debug/Measurement.exe
+
+bin/Debug/Measurement.exe: $(OBJS_DEBUG)
+	@echo Building console executable bin\Debug\Measurement.exe
+	@mingw32-g++.exe  -o bin\Debug\Measurement.exe $(OBJS_DEBUG)   picoscope\PS5000.lib scard\libscard.a 
+
+obj\Debug\lib\EMSFilesystem.o: C:/SVN/SCALAB/Measurement/Measurement/lib/EMSFilesystem.cpp
+	@echo Compiling: C:\SVN\SCALAB\Measurement\Measurement\lib\EMSFilesystem.cpp
+	@mingw32-g++.exe -Wextra -Wall -fexceptions  -g    -Ipicoscope -Iiostreams -Iscard -Ilib  -c C:\SVN\SCALAB\Measurement\Measurement\lib\EMSFilesystem.cpp -o obj\Debug\lib\EMSFilesystem.o
+
+obj\Debug\lib\Scopetool.o: C:/SVN/SCALAB/Measurement/Measurement/lib/Scopetool.cpp
+	@echo Compiling: C:\SVN\SCALAB\Measurement\Measurement\lib\Scopetool.cpp
+	@mingw32-g++.exe -Wextra -Wall -fexceptions  -g    -Ipicoscope -Iiostreams -Iscard -Ilib  -c C:\SVN\SCALAB\Measurement\Measurement\lib\Scopetool.cpp -o obj\Debug\lib\Scopetool.o
+
+obj\Debug\main.o: C:/SVN/SCALAB/Measurement/Measurement/main.cpp
+	@echo Compiling: C:\SVN\SCALAB\Measurement\Measurement\main.cpp
+	@mingw32-g++.exe -Wextra -Wall -fexceptions  -g    -Ipicoscope -Iiostreams -Iscard -Ilib  -c C:\SVN\SCALAB\Measurement\Measurement\main.cpp -o obj\Debug\main.o
+
+obj\Debug\picoscope\picoErrors.o: C:/SVN/SCALAB/Measurement/Measurement/picoscope/picoErrors.c
+	@echo Compiling: C:\SVN\SCALAB\Measurement\Measurement\picoscope\picoErrors.c
+	@mingw32-gcc.exe -Wextra -Wall -fexceptions  -g    -Ipicoscope -Iiostreams -Iscard -Ilib  -c C:\SVN\SCALAB\Measurement\Measurement\picoscope\picoErrors.c -o obj\Debug\picoscope\picoErrors.o
+
+obj\Debug\picoscope\picoscope.o: C:/SVN/SCALAB/Measurement/Measurement/picoscope/picoscope.c
+	@echo Compiling: C:\SVN\SCALAB\Measurement\Measurement\picoscope\picoscope.c
+	@mingw32-gcc.exe -Wextra -Wall -fexceptions  -g    -Ipicoscope -Iiostreams -Iscard -Ilib  -c C:\SVN\SCALAB\Measurement\Measurement\picoscope\picoscope.c -o obj\Debug\picoscope\picoscope.o
+
+obj\Debug\scard\smartcard.o: C:/SVN/SCALAB/Measurement/Measurement/scard/smartcard.cpp
+	@echo Compiling: C:\SVN\SCALAB\Measurement\Measurement\scard\smartcard.cpp
+	@mingw32-g++.exe -Wextra -Wall -fexceptions  -g    -Ipicoscope -Iiostreams -Iscard -Ilib  -c C:\SVN\SCALAB\Measurement\Measurement\scard\smartcard.cpp -o obj\Debug\scard\smartcard.o
+
+obj\Debug\iostreams\dbgstream.o: C:/SVN/SCALAB/Measurement/Measurement/iostreams/dbgstream.cpp
+	@echo Compiling: C:\SVN\SCALAB\Measurement\Measurement\iostreams\dbgstream.cpp
+	@mingw32-g++.exe -Wextra -Wall -fexceptions  -g    -Ipicoscope -Iiostreams -Iscard -Ilib  -c C:\SVN\SCALAB\Measurement\Measurement\iostreams\dbgstream.cpp -o obj\Debug\iostreams\dbgstream.o
+
+C:\SVN\SCALAB\Measurement\Measurement\main.cpp: windows.h smartcard.h dbgstream.h
+
+C:\SVN\SCALAB\Measurement\Measurement\scard\smartcard.cpp: smartcard.h
+
+C:\SVN\SCALAB\Measurement\Measurement\scard\winscard.h: winsmcrd.h SCardErr.h
+
+C:\SVN\SCALAB\Measurement\Measurement\iostreams\dbgstream.cpp: dbgstream.h
+
+C:\SVN\SCALAB\Measurement\Measurement\picoscope\picoscope.c: picoscope.h
+
+C:\SVN\SCALAB\Measurement\Measurement\picoscope\picoscope.h: ps5000Api.h picoErrors.h
+
+.PHONY: clean_Debug
+
+clean_Debug: 
+	@echo Delete $(OBJS_DEBUG) bin\Debug\Measurement.exe
+	-@del /f $(OBJS_DEBUG) bin\Debug\Measurement.exe
+
+
+
