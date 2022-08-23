@@ -7,3 +7,5 @@
 "umasked PIPO output.txt" enthält die Werte jeder Runde von der unmaskierten PIPO Variante. 
 
 "STM32 Project" enthält die maskierte PIPO Variante in C und Assembly.
+
+"STM32 Project" enthält auch die scripts für die Messung.
