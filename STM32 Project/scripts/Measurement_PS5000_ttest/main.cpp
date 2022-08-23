@@ -15,11 +15,10 @@ const unsigned long int PreTriggerSamples = 0; // configure this
 const unsigned long int PostTriggerSamples = 0; // and this
 const unsigned long int NumberOfTraces = 10000;
 
-const uint8_t           FixedKey[16] = {0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF};
 const uint64_t 			k1 = 0x6DC416DD779428D2;
 const uint64_t 			k0 = 0x7E1D20AD2E152297;
 
-//#define ENABLE_SCOPE
+#define ENABLE_SCOPE
 
 
 extern void rlayer (uint8_t *X);
@@ -51,19 +50,9 @@ void remove_mask (uint8_t *x, uint8_t *m) {
 
 int main()
 {
-	///////////////////////////////////////////////////////////////////Mask generation
+	///////////////////////////////////////////////////////////////////set seed for rand() and init mask array
 	srand(time(NULL));
 	uint8_t m[10];
-	m[0] = rand() % 256;
-	m[1] = rand() % 256;
-	m[2] = m[0] ^ m[1];
-	m[3] = ((m[1] >> 1) | (m[1] << 7)) ^ m[1];
-	m[4] = ((m[2] >> 4) | (m[2] << 4)) ^ m[1];
-	m[5] = ((m[0] >> 5) | (m[0] << 3)) ^ m[2];
-	m[6] = ((m[1] >> 2) | (m[1] << 6)) ^ m[0];
-	m[7] = ((m[1] >> 3) | (m[1] << 5)) ^ m[1];
-	m[8] = ((m[2] >> 7) | (m[2] << 1)) ^ m[1];
-	m[9] = ((m[1] >> 6) | (m[1] << 2)) ^ m[0];
 
     ///////////////////////////////////////////////////////////////////Scope
     #ifdef ENABLE_SCOPE
@@ -90,32 +79,13 @@ int main()
     #endif
 
 
-    /////////////////////////////////////////////////////////////////// Init Device and set Mask
+    /////////////////////////////////////////////////////////////////// Init Device
     SFile com;
     com.Open(ComPort, BaudRate);
     com.SetReadTimeOut(10000);
 
     DWORD writtenCtr, receiveCtr;
 	uint8_t ReadBuffer[10];
-	//Set Mask of device
-	com.WriteByte(0x01);
-	com.Write(m, 10, writtenCtr);
-	com.Read(ReadBuffer, 10, receiveCtr);
-
-	if (receiveCtr != 10)
-	{
-	    printf("receive counter: %d\n", receiveCtr);
-		return -2;
-
-	}
-	for (size_t i = 0; i < 10; i++)
-	{
-		if (ReadBuffer[i] != m[i])
-		{
-			return -3;
-		}
-	}
-
 
     /////////////////////////////////////////////////////////////////// FileIO
 
@@ -134,6 +104,36 @@ int main()
         uint8_t X[8];
 
     //**********************CODE HERE***********************************//
+	///////////////////////////////////////////////////////////////////Mask generation
+		m[0] = rand() % 256;
+		m[1] = rand() % 256;
+		m[2] = m[0] ^ m[1];
+		m[3] = ((m[1] >> 1) | (m[1] << 7)) ^ m[1];
+		m[4] = ((m[2] >> 4) | (m[2] << 4)) ^ m[1];
+		m[5] = ((m[0] >> 5) | (m[0] << 3)) ^ m[2];
+		m[6] = ((m[1] >> 2) | (m[1] << 6)) ^ m[0];
+		m[7] = ((m[1] >> 3) | (m[1] << 5)) ^ m[1];
+		m[8] = ((m[2] >> 7) | (m[2] << 1)) ^ m[1];
+		m[9] = ((m[1] >> 6) | (m[1] << 2)) ^ m[0];
+
+	//Set Mask of device
+		com.WriteByte(0x01);
+		com.Write(m, 10, writtenCtr);
+		com.Read(ReadBuffer, 10, receiveCtr);
+
+		if (receiveCtr != 10)
+		{
+			printf("receive counter: %d\n", receiveCtr);
+			return -2;
+
+		}
+		for (size_t i = 0; i < 10; i++)
+		{
+			if (ReadBuffer[i] != m[i])
+			{
+				return -3;
+			}
+		}
 
     // select plaintext here for t test... use rand() function
         int random = rand() % 2;

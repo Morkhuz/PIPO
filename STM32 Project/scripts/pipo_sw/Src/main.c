@@ -54,13 +54,11 @@ UART_HandleTypeDef huart1;
 __ALIGN_BEGIN static uint64_t k1 __ALIGN_END = 0x6DC416DD779428D2;
 __ALIGN_BEGIN static uint64_t k0 __ALIGN_END = 0x7E1D20AD2E152297;
 
-__ALIGN_BEGIN static uint8_t m[8] __ALIGN_END = {
-                            0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+__ALIGN_BEGIN static uint8_t m[10] __ALIGN_END = {
+                            0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 
 __ALIGN_BEGIN static uint8_t X[8] __ALIGN_END = {
                             0x26,0x00,0x27,0x1E,0xF6,0x52,0x85,0x09};
-
-uint8_t roundkeys_asm[11][16] = { 0 };
 
 /* USER CODE END PV */
 
