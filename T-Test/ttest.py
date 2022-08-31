@@ -47,8 +47,8 @@ def get_trace_array(trace, number_of_traces):
 
 def mean(trace_array, rows):
         mean = np.arange(55500, dtype=float)
-        sum = 0.0
         for x in range(55500):
+                sum = 0.0
                 for y in range(rows):
                         sum += trace_array[y][x]
                 mean[x] = sum / rows
@@ -56,8 +56,8 @@ def mean(trace_array, rows):
 
 def standard_deviation(trace_array, rows, mean):
         sigma = np.arange(55500, dtype=float)
-        sum = 0.0
         for x in range(55500):
+                sum = 0.0
                 for y in range(rows):
                         sum += ((trace_array[y][x] - mean[x]) ** 2)
                 variance = sum / (rows - 1)
